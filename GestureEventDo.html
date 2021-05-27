@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.min.js"></script>
+</head>
+
+<body>
+    <div id="game"></div>
+    <script>
+        const phaserConfig = {
+            type: Phaser.AUTO,
+            parent: "game",
+            width: 1280,
+            height: 1290,
+            backgroundColor: "#5dacd8",
+            scene: {
+                init: initScene,
+                preload: preloadScene,
+                create: createScene,
+                update: updateScene
+            }
+
+        };
+
+        const game = new Phaser.Game(phaserConfig);
+        var isClicking = false;
+        var swipeDirection;
+        var width;
+        var heght;
+        function initScene() {
+
+        }
+        function preloadScene() {
+            width = window.screen.width / 2;
+            height = window.screen.height * 3 / 4;
+            console.log(width);
+            console.log(height);
+            this.load.image('plane', 'assets/plan.png');
+        }
+        function createScene() {
+            plane = this.add.sprite(640, 967, 'plane');
+        }
+        function updateScene() {
+            if (!this.input.activePointer.isDown && isClicking == true) {
+                if (Math.abs(this.input.activePointer.upY - this.input.activePointer.downY) >= 20) {
+
+                    if (this.input.activePointer.upY < this.input.activePointer.downY) {
+                        swipeDirection = "up";
+                    } else if (this.input.activePointer.upY > this.input.activePointer.downY) {
+                        swipeDirection = "down";
+                    }
+                }
+                isClicking = false;
+            } else if (this.input.activePointer.isDown && isClicking == false) {
+                isClicking = true;
+            }
+            
+            if (swipeDirection == "down" && plane.y < 967) {
+                if (Math.abs(plane.y - 967) <= 10) {
+                    plane.y = 967;
+                } else {
+                    plane.y += 8;
+                }
+            } else if (swipeDirection == "up" && plane.y > 150) {
+
+                if (Math.abs(plane.y - 150) <= 10) {
+                    plane.y = 150;
+                } else {
+                    plane.y -= 8;
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
